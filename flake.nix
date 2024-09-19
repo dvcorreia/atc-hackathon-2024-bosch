@@ -43,6 +43,9 @@
           with pkgs;
           buildDeps
           ++ [
+            dex-oidc
+            sqlc
+
             bossac_arduino2
             gopls
           ];
