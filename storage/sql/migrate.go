@@ -6,12 +6,13 @@ import (
 	"embed"
 	"fmt"
 
+	"log/slog"
+
 	migrate "github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	"github.com/golang-migrate/migrate/v4/database/sqlite"
 	"github.com/golang-migrate/migrate/v4/source/iofs"
-	"golang.org/x/exp/slog"
 )
 
 //go:embed migrations/*.sql
