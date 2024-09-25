@@ -13,13 +13,11 @@ require (
 	github.com/spf13/viper v1.19.0
 	golang.org/x/oauth2 v0.23.0
 	golang.org/x/sync v0.8.0
-	tinygo.org/x/drivers v0.28.0
 )
 
 require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-jose/go-jose/v4 v4.0.2 // indirect
-	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
