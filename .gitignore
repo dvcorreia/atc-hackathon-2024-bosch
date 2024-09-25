@@ -4,6 +4,9 @@ bin/
 config.yaml
 config.yml
 
+# Nix
+result
+
 # OS
 .DS_Store
 

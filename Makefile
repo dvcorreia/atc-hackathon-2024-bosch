@@ -11,9 +11,8 @@ LDFLAGS += -X main.version=$(VERSION) -X main.commitHash=$(COMMIT_HASH) -X main.
 
 # set by devShell in flake.nix, you can overwrite here
 # targets: > tinygo targets 
-TARGET_BOARD ?= nano-33-ble
-
-TINYGO_FLAGS += -target=$(TARGET_BOARD)
+TARGET_BOARD ?= arduino:mbed_nano:nano33ble
+BOARD_USB_PORT ?= $(shell arduino-cli board list | grep $(TARGET_BOARD) | awk '{print $$1}')
 
 .DEFAULT_GOAL: help
 default: help
@@ -29,14 +28,14 @@ build: ## build nervous-sys
 
 ##@ Embeded
 
+.PHONY: firmware
 fw: firmware
 firmware: ## compile firmware
-	@mkdir -p $(BUILD_DIR)
-	tinygo build $(TINYGO_FLAGS) -o $(BUILD_DIR)/$(TARGET_BOARD).elf ./cmd/$(TARGET_BOARD)
-flash: ## builds and flashes the firmware
-	tinygo flash $(TINYGO_FLAGS)
-monitor: ## monitors the micro UART
-	tinygo monitor
+	nix build .#nano33-fw
+flash: firmware ## builds and flashes the firmware
+	arduino-cli upload -p $(BOARD_USB_PORT) --fqbn $(TARGET_BOARD) --input-dir ./result/bin/
+monitor: ## monitor the serial port
+	arduino-cli monitor --port $(BOARD_USB_PORT)
 
 .PHONY: help
 help:

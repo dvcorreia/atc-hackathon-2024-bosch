@@ -1,0 +1,4 @@
+# https://arduino.github.io/arduino-cli/1.0/sketch-project-file/
+profiles:
+  nano33:
+    fqbn: arduino:mbed_nano:nano33ble
