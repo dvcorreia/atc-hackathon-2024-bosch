@@ -39,7 +39,10 @@
         pkgs = (import nixpkgs) { inherit system overlays; };
 
         arduino-cli = pkgs.wrapArduinoCLI {
-          libraries = with pkgs.arduinoLibraries; [ (arduino-nix.latestVersion ArduinoBLE) ];
+          libraries = with pkgs.arduinoLibraries; [
+            (arduino-nix.latestVersion ArduinoBLE)
+            (arduino-nix.latestVersion Arduino_LSM9DS1)
+          ];
 
           packages = with pkgs.arduinoPackages; [
             platforms.arduino.avr."1.6.23"
@@ -51,9 +54,9 @@
           git
           gnumake
           go
-          tinygo
-
           arduino-cli
+          nodejs_22
+          pnpm_8
         ];
 
         devDeps =

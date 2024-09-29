@@ -10,9 +10,11 @@ import (
 	"path/filepath"
 )
 
+//go:generate pnpm run build
+
 // dist containing the static web content.
 //
-//go:embed app/dist/*
+//go:embed dist/*
 var dist embed.FS
 
 var ErrDir = errors.New("path is dir")

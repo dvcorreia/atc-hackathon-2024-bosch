@@ -4,6 +4,9 @@ bin/
 config.yaml
 config.yml
 
+# Javascript
+node_modules
+
 # Nix
 result
 
