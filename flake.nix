@@ -63,7 +63,6 @@
           with pkgs;
           buildDeps
           ++ [
-            dex-oidc
             sqlc
             gopls
           ];

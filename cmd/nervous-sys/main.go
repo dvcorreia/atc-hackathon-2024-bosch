@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"net/url"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
-	"github.com/dvcorreia/atc-hackathon-2024-bosch/internal/auth"
 	"github.com/dvcorreia/atc-hackathon-2024-bosch/internal/platform/buildinfo"
 	"github.com/dvcorreia/atc-hackathon-2024-bosch/internal/platform/log"
 	"github.com/dvcorreia/atc-hackathon-2024-bosch/web"
@@ -105,25 +103,6 @@ func main() { //nolint:funlen,gocyclo
 
 	errg, ctx := errgroup.WithContext(ctx)
 
-	// Set up authentication
-	authenticator, err := auth.New(auth.WithOptions(auth.Options{
-		ClientID:     "nervous-sys",
-		ClientSecret: "ZXhhbXBsZS1hcHAtc2VjcmV0",
-		IssuerURL:    "http://127.0.0.1:5556/dex",
-		RedirectURI:  "http://127.0.0.1:5555/callback",
-	}))
-	if err != nil {
-		logger.Error("could not create authenticator", "err", err)
-		return
-	}
-
-	if u, err := url.Parse("http://127.0.0.1:5555/loggedin"); err != nil {
-		logger.Error("bad spa redirect URI", "err", err)
-		return
-	} else {
-		authenticator.SpaRedirectURI = *u
-	}
-
 	// Set up http public API server
 	{
 		logger := logger.With(
@@ -137,9 +116,6 @@ func main() { //nolint:funlen,gocyclo
 		r.Use(middleware.Recoverer)
 
 		r.Mount("/api/buildinfo", buildinfo.HTTPHandler(buildInfo))
-
-		r.Get("/login", authenticator.HandleRedirect)
-		r.HandleFunc("/callback", authenticator.HandleOAuth2Callback)
 
 		r.NotFound(web.SPAHandler)
 
