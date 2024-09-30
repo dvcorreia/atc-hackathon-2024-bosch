@@ -11,14 +11,14 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as StudyImport } from './routes/study'
+import { Route as MeasureCycletimeImport } from './routes/measure-cycletime'
 import { Route as IndexImport } from './routes/index'
 import { Route as MeasureIndexImport } from './routes/measure/index'
 
 // Create/Update Routes
 
-const StudyRoute = StudyImport.update({
-  path: '/study',
+const MeasureCycletimeRoute = MeasureCycletimeImport.update({
+  path: '/measure-cycletime',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -43,11 +43,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/study': {
-      id: '/study'
-      path: '/study'
-      fullPath: '/study'
-      preLoaderRoute: typeof StudyImport
+    '/measure-cycletime': {
+      id: '/measure-cycletime'
+      path: '/measure-cycletime'
+      fullPath: '/measure-cycletime'
+      preLoaderRoute: typeof MeasureCycletimeImport
       parentRoute: typeof rootRoute
     }
     '/measure/': {
@@ -64,41 +64,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/study': typeof StudyRoute
+  '/measure-cycletime': typeof MeasureCycletimeRoute
   '/measure': typeof MeasureIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/study': typeof StudyRoute
+  '/measure-cycletime': typeof MeasureCycletimeRoute
   '/measure': typeof MeasureIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/study': typeof StudyRoute
+  '/measure-cycletime': typeof MeasureCycletimeRoute
   '/measure/': typeof MeasureIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/study' | '/measure'
+  fullPaths: '/' | '/measure-cycletime' | '/measure'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/study' | '/measure'
-  id: '__root__' | '/' | '/study' | '/measure/'
+  to: '/' | '/measure-cycletime' | '/measure'
+  id: '__root__' | '/' | '/measure-cycletime' | '/measure/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  StudyRoute: typeof StudyRoute
+  MeasureCycletimeRoute: typeof MeasureCycletimeRoute
   MeasureIndexRoute: typeof MeasureIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  StudyRoute: StudyRoute,
+  MeasureCycletimeRoute: MeasureCycletimeRoute,
   MeasureIndexRoute: MeasureIndexRoute,
 }
 
@@ -115,15 +115,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/study",
+        "/measure-cycletime",
         "/measure/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/study": {
-      "filePath": "study.tsx"
+    "/measure-cycletime": {
+      "filePath": "measure-cycletime.tsx"
     },
     "/measure/": {
       "filePath": "measure/index.tsx"

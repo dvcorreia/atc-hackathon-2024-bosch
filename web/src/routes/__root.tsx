@@ -3,16 +3,10 @@ import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 
 import {
   Ruler,
-  Notebook,
-  Worm,
+  Home
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
 export const Route = createRootRoute({
   component: Root,
@@ -20,53 +14,21 @@ export const Route = createRootRoute({
 
 function Root() {
   return (
-    <div className="grid h-screen w-full pl-[56px]">
-      <aside className="inset-y fixed left-0 z-20 flex h-full flex-col border-r">
-        <div className="border-b p-2">
-          <Link to='/'>
-            <Button variant="outline" size="icon" aria-label="Home">
-              <Worm className="size-5 fill-foreground" />
-            </Button>
-          </Link>
-        </div>
-        <nav className="grid gap-1 p-2">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link to="/measure">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-lg bg-muted"
-                  aria-label="Measure"
-                >
-                  <Ruler className="size-5" />
-                </Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Measure
-            </TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Link to='/study'>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-lg"
-                  aria-label="Study"
-                >
-                  <Notebook className="size-5" />
-                </Button>
-              </Link>
-            </TooltipTrigger>
-            <TooltipContent side="right" sideOffset={5}>
-              Study
-            </TooltipContent>
-          </Tooltip>
-        </nav>
-      </aside>
-      
+    <div className="min-h-screen flex flex-col bg-background">
+      <nav className="flex justify-between items-center p-4 text-primary-foreground">
+        <Link to='/'>
+          <Button size="icon" className="text-primary-foreground">
+            <Home className="h-6 w-6" />
+          </Button>
+        </Link>
+        <Link to='/measure-cycletime'>
+          <Button variant="secondary" className="bg-secondary text-secondary-foreground">
+            <Ruler className="mr-2 h-4 w-4" />
+            New Measurement
+          </Button>
+        </Link>
+      </nav>
+      <hr />
       <Outlet />
       <TanStackRouterDevtools />
     </div>
