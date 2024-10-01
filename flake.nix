@@ -40,6 +40,7 @@
 
         arduino-cli = pkgs.wrapArduinoCLI {
           libraries = with pkgs.arduinoLibraries; [
+            (arduino-nix.latestVersion Wasm3)
             (arduino-nix.latestVersion ArduinoBLE)
             (arduino-nix.latestVersion Arduino_LSM9DS1)
           ];
@@ -54,9 +55,14 @@
           git
           gnumake
           go
+          tinygo
           arduino-cli
           nodejs_22
           pnpm_8
+
+          binaryen
+          wabt
+          unixtools.xxd
         ];
 
         devDeps =
@@ -72,6 +78,9 @@
       {
         packages = {
           nano33-fw = pkgs.callPackage ./firmware/nano33/default.nix { inherit arduino-cli; };
+          nano33-wasm-blink-fw = pkgs.callPackage ./firmware/nano33-wasm-blink/default.nix {
+            inherit arduino-cli;
+          };
         };
 
         devShell = pkgs.mkShell {
