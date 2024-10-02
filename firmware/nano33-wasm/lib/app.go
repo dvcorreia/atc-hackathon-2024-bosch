@@ -45,21 +45,17 @@ func printInt(i uint32)
 //go:export printFloat
 func printFloat(i float32)
 
-// //go:wasm-module arduino
-// //go:export giroAvailable
-// func giroAvailable() uint32
-
-//go:wasm-module arduino
-//go:export gyroReadData
-func gyroReadData()
-
-//go:wasm-module arduino
-//go:export gyrGetEix
-func gyrGetEix(uint32) float32
-
 //go:wasm-module arduino
 //go:export imuGyroRead
-func imuGyroRead(xPtr, yPtr, zPtr *float32)
+func imuGyroRead(x *float32, y *float32, z *float32)
+
+//go:wasm-module arduino
+//go:export advBLETs
+func advBLETs(ts uint32)
+
+//go:wasm-module arduino
+//go:export blePool
+func blePool()
 
 /*
  * App
@@ -91,6 +87,9 @@ func loop() {
 
 	count++
 	printInt(count)
+
+	advBLETs(1)
+	blePool()
 }
 
 /*

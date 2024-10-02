@@ -1,46 +1,44 @@
-/*
-  Arduino LSM9DS1 - Simple Gyroscope
+#include <ArduinoBLE.h>
 
-  This example reads the gyroscope values from the LSM9DS1
-  sensor and continuously prints them to the Serial Monitor
-  or Serial Plotter.
+BLEService myService("fff0");
+BLEIntCharacteristic myCharacteristic("fff1", BLERead | BLEBroadcast);
 
-  The circuit:
-  - Arduino Nano 33 BLE Sense
-
-  created 10 Jul 2019
-  by Riccardo Rizzo
-
-  This example code is in the public domain.
-*/
-
-#include <Arduino_BMI270_BMM150.h> // Biblioteca para o IMU (acelerômetro e giroscópio)
+// Advertising parameters should have a global scope. Do NOT define them in 'setup' or in 'loop'
+const uint8_t manufactData[4] = {0x01, 0x02, 0x03, 0x04};
+const uint8_t serviceData[3] = {0x00, 0x01, 0x02};
 
 void setup() {
   Serial.begin(9600);
   while (!Serial);
-  Serial.println("Started");
 
-  if (!IMU.begin()) {
-    Serial.println("Failed to initialize IMU!");
+  if (!BLE.begin()) {
+    Serial.println("failed to initialize BLE!");
     while (1);
   }
-//   Serial.print("Gyroscope sample rate = ");
-//   Serial.print(IMU.gyroscopeSampleRate());
-//   Serial.println(" Hz");
-//   Serial.println();
-//   Serial.println("Gyroscope in degrees/second");
-//   Serial.println("X\tY\tZ");
+
+  myService.addCharacteristic(myCharacteristic);
+  BLE.addService(myService);
+
+  // Build scan response data packet
+  BLEAdvertisingData scanData;
+  // Set parameters for scan response packet
+  scanData.setLocalName("Test enhanced advertising");
+  // Copy set parameters in the actual scan response packet
+  BLE.setScanResponseData(scanData);
+
+  // Build advertising data packet
+  BLEAdvertisingData advData;
+  // Set parameters for advertising packet
+  advData.setManufacturerData(0x004C, manufactData, sizeof(manufactData));
+  advData.setAdvertisedService(myService);
+  advData.setAdvertisedServiceData(0xfff0, serviceData, sizeof(serviceData));
+  // Copy set parameters in the actual advertising packet
+  BLE.setAdvertisingData(advData);
+
+  BLE.advertise();
+  Serial.println("advertising ...");
 }
 
 void loop() {
-    float xGyro, yGyro, zGyro;
-    IMU.readGyroscope(xGyro, yGyro, zGyro);
-    Serial.print("Giroscópio (°/s): ");
-    Serial.print(xGyro, 3);
-    Serial.print(", ");
-    Serial.print(yGyro, 3);
-    Serial.print(", ");
-    Serial.println(zGyro, 3);
-    delay(1000);
+  BLE.poll();
 }
