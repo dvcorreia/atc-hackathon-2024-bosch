@@ -43,6 +43,9 @@
             (arduino-nix.latestVersion Wasm3)
             (arduino-nix.latestVersion ArduinoBLE)
             (arduino-nix.latestVersion Arduino_LSM9DS1)
+            (arduino-nix.latestVersion Arduino_LPS22HB)
+            (arduino-nix.latestVersion Arduino_APDS9960)
+            (arduino-nix.latestVersion Arduino_BMI270_BMM150)
           ];
 
           packages = with pkgs.arduinoPackages; [
@@ -77,8 +80,11 @@
       in
       {
         packages = {
-          nano33-fw = pkgs.callPackage ./firmware/nano33/default.nix { inherit arduino-cli; };
-          nano33-wasm-blink-fw = pkgs.callPackage ./firmware/nano33-wasm-blink/default.nix {
+          nano33 = pkgs.callPackage ./firmware/nano33/default.nix { inherit arduino-cli; };
+          nano33-sensors = pkgs.callPackage ./firmware/nano33-sensors/default.nix { inherit arduino-cli; };
+          nano33-wasm = pkgs.callPackage ./firmware/nano33-wasm/default.nix { inherit arduino-cli; };
+          nano33-rev2-wasm = pkgs.callPackage ./firmware/nano33-wasm/default-rev2.nix { inherit arduino-cli; };
+          nano33-wasm-blink = pkgs.callPackage ./firmware/nano33-wasm-blink/default.nix {
             inherit arduino-cli;
           };
         };

@@ -28,12 +28,6 @@ build: ## build nervous-sys
 
 ##@ Embeded
 
-.PHONY: firmware
-fw: firmware
-firmware: ## compile firmware
-	nix build .#nano33-fw
-flash: firmware ## builds and flashes the firmware
-	arduino-cli upload -p $(BOARD_USB_PORT) --fqbn $(TARGET_BOARD) --input-dir ./result/bin/
 monitor: ## monitor the serial port
 	arduino-cli monitor --port $(BOARD_USB_PORT)
 
