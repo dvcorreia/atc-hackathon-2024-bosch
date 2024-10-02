@@ -1,33 +1,24 @@
-NAME ?= nervous-sys
 DESCRIPTION ?= ATC Hackathon 2024: Bosch the Aveiro Tech City
 
-VERSION ?= $(shell git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD)
-COMMIT_HASH ?= $(shell git rev-parse --short HEAD 2>/dev/null)
-DATE_FMT ?= %Y-%m-%dT%H:%M:%SZ # ISO 8601
-COMMIT_DATE ?= $(shell git log -1 --format=%cd --date=format:'$(DATE_FMT)' $(VERSION))
-
-BUILD_DIR ?= bin
-LDFLAGS += -X main.version=$(VERSION) -X main.commitHash=$(COMMIT_HASH) -X main.buildDate=$(COMMIT_DATE)
-
 # set by devShell in flake.nix, you can overwrite here
-# targets: > tinygo targets 
+# targets: > tinygo targets
 TARGET_BOARD ?= arduino:mbed_nano:nano33ble
 BOARD_USB_PORT ?= $(shell arduino-cli board list | grep $(TARGET_BOARD) | awk '{print $$1}')
+
+MAIN_FW ?= nano33-rev2-wasm
 
 .DEFAULT_GOAL: help
 default: help
 
-##@ Server
-
-.PHONY: run build
-run: build ## run nervous-sys
-	$(BUILD_DIR)/$(NAME)
-build: ## build nervous-sys
-	@mkdir -p $(BUILD_DIR)
-	go build -ldflags "$(LDFLAGS)" -o $(BUILD_DIR)/nervous-sys ./cmd/$(NAME)
-
 ##@ Embeded
 
+.PHONY: build-%
+build: build-$(MAIN_FW)
+build-%: ## build firmware
+	nix build .#$*
+
+flash: ## flash nano33
+	arduino-cli upload -p /dev/cu.usbmodem4101 --fqbn arduino:mbed_nano:nano33ble --input-dir ./result/bin/
 monitor: ## monitor the serial port
 	arduino-cli monitor --port $(BOARD_USB_PORT)
 
