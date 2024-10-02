@@ -54,6 +54,10 @@ func imuGyroRead(x *float32, y *float32, z *float32)
 func advBLETs(ts uint32)
 
 //go:wasm-module arduino
+//go:export stopAdvBLE
+func stopAdvBLE()
+
+//go:wasm-module arduino
 //go:export blePool
 func blePool()
 
@@ -88,6 +92,7 @@ func loop() {
 	count++
 	printInt(count)
 
+	stopAdvBLE()
 	advBLETs(1)
 	blePool()
 }
