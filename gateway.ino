@@ -5,12 +5,10 @@
 #include <BLEScan.h>
 #include <ESPmDNS.h>
 
-const char* ssid = "";                                                      // Wi-Fi Credentials
-const char* password = "";                                                  // Wi-Fi Credentials
-//const char* ssid = "";                                                               // Wi-Fi Credentials
-//const char* password = "";                                                   // Wi-Fi Credentials
-const char* serverName = "http://h.domain.eu:9572/telegraf";   // HTTP Endpoint
-const uint8_t  bleManufacturerId[2] = {0xE0, 0x00};
+const char* ssid = "TP-Link_9E26";                                                               // Wi-Fi Credentials
+const char* password = "62859007";                                                   // Wi-Fi Credentials
+const char* serverName = "http://h.dmelo.eu:9572/telegraf";   // HTTP Endpoint
+const uint8_t  bleManufacturerId[2] = {0xFF, 0xCC};
 
 // Web Server
 WiFiServer server(80);
@@ -66,12 +64,17 @@ public:
         if (count == 0) {
             return false; // Queue is empty
         }
+        const BeaconData& data = buffer[head];
+        if(strcmp(data.bleAddress, bleAddress) == 0 && data.frameCounter == frameCounter) {
+              return true;
+        }
+        /*
         for (int i = 0; i < count; i++) {
             const BeaconData& data = buffer[(tail + i) % MAX_DEVICES];
             if(strcmp(data.bleAddress, bleAddress) == 0 && data.frameCounter == frameCounter) {
               return true;
             }
-        }
+        }*/
         return false;
     }
 
@@ -119,7 +122,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
         }
 
         uint16_t frameCounter = (data[6]) | (data[7] << 8);
-        uint32_t elapsedTime = (data[5]) | (data[4] << 8) | (data[3] << 16) | (data[2] << 24);
+        uint32_t elapsedTime = (data[2]) | (data[3] << 8) | (data[4] << 16) | (data[5] << 24);
         char bleAddress[18];
         strncpy(bleAddress, advertisedDevice.getAddress().toString().c_str(), 18);
         if(!beaconQueue.checkDuplicatedFrameCounter(bleAddress, frameCounter)) {
