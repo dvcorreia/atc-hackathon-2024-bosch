@@ -46,6 +46,10 @@
             (arduino-nix.latestVersion Arduino_LPS22HB)
             (arduino-nix.latestVersion Arduino_APDS9960)
             (arduino-nix.latestVersion Arduino_BMI270_BMM150)
+            (arduino-nix.latestVersion WiFi)
+            # (arduino-nix.latestVersion HTTPClient)
+            # (arduino-nix.latestVersion ESP32_BLE_Arduino)
+            # (arduino-nix.latestVersion ESPmDNS)
           ];
 
           packages = with pkgs.arduinoPackages; [
@@ -80,10 +84,13 @@
       in
       {
         packages = {
+          esp32-gateway = pkgs.callPackage ./firmware/esp32-gateway/default.nix { inherit arduino-cli; };
           nano33 = pkgs.callPackage ./firmware/nano33/default.nix { inherit arduino-cli; };
           nano33-sensors = pkgs.callPackage ./firmware/nano33-sensors/default.nix { inherit arduino-cli; };
           nano33-wasm = pkgs.callPackage ./firmware/nano33-wasm/default.nix { inherit arduino-cli; };
-          nano33-rev2-wasm = pkgs.callPackage ./firmware/nano33-wasm/default-rev2.nix { inherit arduino-cli; };
+          nano33-rev2-wasm = pkgs.callPackage ./firmware/nano33-wasm/default-rev2.nix {
+            inherit arduino-cli;
+          };
           nano33-wasm-blink = pkgs.callPackage ./firmware/nano33-wasm-blink/default.nix {
             inherit arduino-cli;
           };
