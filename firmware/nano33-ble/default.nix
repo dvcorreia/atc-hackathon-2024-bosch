@@ -7,7 +7,7 @@
 
 # TODO: compile WASM with nix
 stdenv.mkDerivation (finalAttrs: {
-    pname = "nano33-sensors";
+    pname = "nano33-ble";
     version = "0.0.1";
 
     src = ./.;
@@ -25,7 +25,7 @@ stdenv.mkDerivation (finalAttrs: {
         export ARDUINO_DIRECTORIES_DATA="$PWD/build"
         export ARDUINO_DIRECTORIES_DOWNLOADS="$PWD/build/staging"
 
-        arduino-cli compile --fqbn arduino:mbed_nano:nano33ble --output-dir bin nano33-sensors.ino
+        arduino-cli compile --fqbn arduino:mbed_nano:nano33ble --output-dir bin nano33-ble.ino
     '';
 
     installPhase = ''
