@@ -18,7 +18,7 @@ build-%: ## build firmware
 	nix build .#$*
 
 flash: ## flash nano33
-	arduino-cli upload -p /dev/cu.usbmodem4101 --fqbn arduino:mbed_nano:nano33ble --input-dir ./result/bin/
+	arduino-cli upload -p $(BOARD_USB_PORT) --fqbn arduino:mbed_nano:nano33ble --input-dir ./result/bin/
 monitor: ## monitor the serial port
 	arduino-cli monitor --port $(BOARD_USB_PORT)
 

@@ -46,7 +46,7 @@
             (arduino-nix.latestVersion Arduino_LPS22HB)
             (arduino-nix.latestVersion Arduino_APDS9960)
             (arduino-nix.latestVersion Arduino_BMI270_BMM150)
-            (arduino-nix.latestVersion WiFi)
+            # (arduino-nix.latestVersion WiFi)
             # (arduino-nix.latestVersion HTTPClient)
             # (arduino-nix.latestVersion ESP32_BLE_Arduino)
             # (arduino-nix.latestVersion ESPmDNS)

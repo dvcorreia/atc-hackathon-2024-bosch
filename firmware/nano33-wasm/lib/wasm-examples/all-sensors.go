@@ -65,60 +65,50 @@ func stopAdvBLE()
 //go:export blePool
 func blePool()
 
-type State int
-
-const (
-	IDLE      = 0
-	MEASURING = 1
-)
-
-func Abs(x float32) float32 {
-	if x < 0 {
-		return -1 * x
-	}
-	return x
-}
-
-var (
-	state     State = IDLE
-	startTime uint
-	endTime   uint
-	threshold float32 = 80.0
-)
+/*
+ * App
+ */
 
 var LED = getPinLED()
+var count uint32
 
 func setup() {
 	pinMode(LED, 1)
-	digitalWrite(LED, LOW)
 }
-
-var magX, magY, magZ float32
 
 func loop() {
-	imuMagRead(&magX, &magY, &magZ)
+	digitalWrite(LED, HIGH)
+	delay(1000)
+	digitalWrite(LED, LOW)
+	delay(1000)
 
-	magStrenght := Abs(magX) + Abs(magY) + Abs(magZ)
+	// gyroReadData()
+	// printFloat(gyrGetEix(0))
+	// printFloat(gyrGetEix(1))
+	// printFloat(gyrGetEix(2))
+	var x, y, z float32
 
-	if magStrenght == 0 {
-		return
-	}
+	imuGyroRead(&x, &y, &z)
+	printFloat(x)
+	printFloat(y)
+	printFloat(z)
 
-	printFloat(magStrenght)
-	if magStrenght > threshold {
-		if state == IDLE {
-			startTime = millis()
-			state = MEASURING
-			digitalWrite(LED, HIGH)
-		}
-	} else {
-		if state == MEASURING {
-			endTime = millis() - startTime
-			state = IDLE
-			digitalWrite(LED, LOW)
-		}
-	}
+	count++
+	printInt(count)
+
+	imuMagRead(&x, &y, &z)
+	printFloat(x)
+	printFloat(y)
+	printFloat(z)
+
+	stopAdvBLE()
+	advBLETs(1)
+	blePool()
 }
+
+/*
+ * Entry point
+ */
 
 func main() {
 	setup()
