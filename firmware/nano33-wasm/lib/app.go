@@ -34,6 +34,18 @@ func digitalWrite(pin, value uint)
 func getPinLED() uint
 
 //go:wasm-module arduino
+//go:export getPinRedLED
+func getPinRedLED() uint
+
+//go:wasm-module arduino
+//go:export getPinGreenLED
+func getPinGreenLED() uint
+
+//go:wasm-module arduino
+//go:export getPinBlueLED
+func getPinBlueLED() uint
+
+//go:wasm-module arduino
 //go:export print
 func print(buf []byte, len uint32)
 
@@ -86,11 +98,25 @@ var (
 	threshold float32 = 80.0
 )
 
-var LED = getPinLED()
+var (
+	LED  = getPinLED()
+	LEDR = getPinRedLED()
+	LEDG = getPinGreenLED()
+	LEDB = getPinBlueLED()
+)
 
 func setup() {
 	pinMode(LED, 1)
+
+	pinMode(LEDR, 1)
+	pinMode(LEDG, 1)
+	pinMode(LEDB, 1)
+
 	digitalWrite(LED, LOW)
+
+	digitalWrite(LEDR, HIGH)
+	digitalWrite(LEDG, LOW)
+	digitalWrite(LEDB, HIGH)
 }
 
 var magX, magY, magZ float32
