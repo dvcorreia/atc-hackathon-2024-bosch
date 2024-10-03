@@ -67,7 +67,7 @@ func imuMagRead(x *float32, y *float32, z *float32)
 
 //go:wasm-module arduino
 //go:export advBLETs
-func advBLETs(ts uint32)
+func advBLETs(frameCounter uint16, elapsedTime uint)
 
 //go:wasm-module arduino
 //go:export stopAdvBLE
@@ -92,10 +92,11 @@ func Abs(x float32) float32 {
 }
 
 var (
-	state     State = IDLE
-	startTime uint
-	endTime   uint
-	threshold float32 = 80.0
+	state        State = IDLE
+	startTime    uint
+	frameCounter uint16
+	elapsedTime  uint
+	threshold    float32 = 80.0
 )
 
 var (
@@ -139,11 +140,17 @@ func loop() {
 		}
 	} else {
 		if state == MEASURING {
-			endTime = millis() - startTime
+			elapsedTime = millis() - startTime
 			state = IDLE
 			digitalWrite(LED, LOW)
+
+			// Advertise Beacon
+			frameCounter++
+			stopAdvBLE()
+			advBLETs(frameCounter, elapsedTime)
 		}
 	}
+	blePool()
 }
 
 func main() {
