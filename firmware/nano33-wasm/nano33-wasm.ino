@@ -1846,7 +1846,7 @@ void setup() {
 
     // Wait for serial port to connect
     // Needed for native USB port only
-    while(!Serial) {}
+    // while(!Serial) {}
 
     Serial.println("setup started");
 
