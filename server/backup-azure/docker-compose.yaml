@@ -34,12 +34,12 @@ services:
     image: grafana/grafana-enterprise:10.1.5
     restart: always
     environment:
-#       GF_GRAFANA_NET_INSTANCE_NAME: "hackathon.rui.martins.pt"
-#       GF_SERVER_HTTP_PORT: "80"
+       #       GF_GRAFANA_NET_INSTANCE_NAME: "hackathon.rui.martins.pt"
+       #       GF_SERVER_HTTP_PORT: "80"
        # GF_SERVER_DOMAIN: "dao.wavesys.pt"
        # GF_SERVER_ROOT_URL: "http://dao.wavesys.pt/"
-       #      GF_SERVER_ROOT_URL: "http://20.82.5.250/"
-#       GF_SERVER_ROOT_URL: "http://hackathon.rui.martins.pt/"
+       GF_SERVER_ROOT_URL: "http://20.82.5.250/"
+       #       GF_SERVER_ROOT_URL: "http://hackathon.rui.martins.pt/"
        # #GF_SERVER_CERT_KEY: "/var/lib/grafana/grafana.key"
        # GF_SERVER_ENFORCE_DOMAIN: "TRUE"
        # GF_SERVER_FROM_SUB_PATH: "TRUE"
