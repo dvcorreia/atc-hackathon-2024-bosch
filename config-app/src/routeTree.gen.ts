@@ -11,14 +11,14 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as MeasureCycletimeImport } from './routes/measure-cycletime'
+import { Route as ListenImport } from './routes/listen'
 import { Route as IndexImport } from './routes/index'
 import { Route as MeasureIndexImport } from './routes/measure/index'
 
 // Create/Update Routes
 
-const MeasureCycletimeRoute = MeasureCycletimeImport.update({
-  path: '/measure-cycletime',
+const ListenRoute = ListenImport.update({
+  path: '/listen',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -43,11 +43,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexImport
       parentRoute: typeof rootRoute
     }
-    '/measure-cycletime': {
-      id: '/measure-cycletime'
-      path: '/measure-cycletime'
-      fullPath: '/measure-cycletime'
-      preLoaderRoute: typeof MeasureCycletimeImport
+    '/listen': {
+      id: '/listen'
+      path: '/listen'
+      fullPath: '/listen'
+      preLoaderRoute: typeof ListenImport
       parentRoute: typeof rootRoute
     }
     '/measure/': {
@@ -64,41 +64,41 @@ declare module '@tanstack/react-router' {
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/measure-cycletime': typeof MeasureCycletimeRoute
+  '/listen': typeof ListenRoute
   '/measure': typeof MeasureIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/measure-cycletime': typeof MeasureCycletimeRoute
+  '/listen': typeof ListenRoute
   '/measure': typeof MeasureIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexRoute
-  '/measure-cycletime': typeof MeasureCycletimeRoute
+  '/listen': typeof ListenRoute
   '/measure/': typeof MeasureIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/measure-cycletime' | '/measure'
+  fullPaths: '/' | '/listen' | '/measure'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/measure-cycletime' | '/measure'
-  id: '__root__' | '/' | '/measure-cycletime' | '/measure/'
+  to: '/' | '/listen' | '/measure'
+  id: '__root__' | '/' | '/listen' | '/measure/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  MeasureCycletimeRoute: typeof MeasureCycletimeRoute
+  ListenRoute: typeof ListenRoute
   MeasureIndexRoute: typeof MeasureIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  MeasureCycletimeRoute: MeasureCycletimeRoute,
+  ListenRoute: ListenRoute,
   MeasureIndexRoute: MeasureIndexRoute,
 }
 
@@ -115,15 +115,15 @@ export const routeTree = rootRoute
       "filePath": "__root.tsx",
       "children": [
         "/",
-        "/measure-cycletime",
+        "/listen",
         "/measure/"
       ]
     },
     "/": {
       "filePath": "index.tsx"
     },
-    "/measure-cycletime": {
-      "filePath": "measure-cycletime.tsx"
+    "/listen": {
+      "filePath": "listen.tsx"
     },
     "/measure/": {
       "filePath": "measure/index.tsx"

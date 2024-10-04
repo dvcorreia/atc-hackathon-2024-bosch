@@ -86,7 +86,7 @@
         packages = {
           esp32-gateway = pkgs.callPackage ./firmware/esp32-gateway/default.nix { inherit arduino-cli; };
           nano33 = pkgs.callPackage ./firmware/nano33/default.nix { inherit arduino-cli; };
-          nano33-sensors = pkgs.callPackage ./firmware/nano33-sensors/default.nix { inherit arduino-cli; };
+          nano33-ble = pkgs.callPackage ./firmware/nano33-ble/default.nix { inherit arduino-cli; };
           nano33-wasm = pkgs.callPackage ./firmware/nano33-wasm/default.nix { inherit arduino-cli; };
           nano33-rev2-wasm = pkgs.callPackage ./firmware/nano33-wasm/default-rev2.nix {
             inherit arduino-cli;

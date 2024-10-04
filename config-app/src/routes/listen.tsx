@@ -1,7 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
-import { createMachine } from 'xstate';
-import { useMachine } from '@xstate/react';
+import { useEffect, useState } from 'react'
 
 import { Bluetooth } from 'lucide-react'
 
@@ -12,79 +10,48 @@ import { ToastAction } from '@/components/ui/toast'
 const cycleTimeServiceUUID = 0xFFF0
 const cycleTimeCharacteristicUUID = 0xFFF1
 
-const cycleTimeMeasureMachine = createMachine({
-    id: "cycle-time",
-    initial: "initial",
-    states: {
-        "initial": {
-            on: {
-                DEVICE_CONNECTED: 'connected'
-            }
-        },
-        "connected": {
-            on: {
-                START_MEASURE: 'measuring',
-                DEVICE_DICONNECTED: 'initial',
-            }
-        },
-        "measuring": {
-            on: {
-                FINISH_MEASURE: 'results',
-                DEVICE_DICONNECTED: 'initial',
-            }
-        },
-        "results": {
-            on: {
-                NEW_MEASUREMENT: 'initial'
-            }
-        }
-    }
+export const Route = createFileRoute('/listen')({
+  component: Listen,
 })
 
-export const Route = createFileRoute('/measure-cycletime')({
-  component: () => {
-    const [state, send] = useMachine(cycleTimeMeasureMachine);
+function Listen() {
+    const [packets, usePackets] = useState<string[]>([])
+
+    function onListen() {
+        navigator.bluetooth.requestLEScan({
+            filters: [{
+                services: [cycleTimeServiceUUID]
+            }]
+        }).then(scan => {
+            console.debug('Scan started with:');
+            console.debug(' acceptAllAdvertisements: ' + scan.acceptAllAdvertisements);
+            console.debug(' active: ' + scan.active);
+            console.debug(' keepRepeatedDevices: ' + scan.keepRepeatedDevices);
+            console.debug(' filters: ' + JSON.stringify(scan.filters));
+        })
+
+        navigator.bluetooth.addEventListener("advertisementreceived", e => {
+            e.serviceData.forEach((valueDataView, key) => {
+                const textDecoder = new TextDecoder('ascii');
+                const asciiString = textDecoder.decode(valueDataView.buffer);
+                usePackets([asciiString, ...packets])
+            });
+        })
+    }
 
     return (
         <main className="flex-grow flex items-center justify-center p-4">
-            {state.matches('initial') && <Initial />}
-            {state.matches('connected') && <Connected />}
-            {state.matches('measuring') && <Measuring />}
-            {state.matches('results') && <Results />}
+            <Button onClick={onListen}>
+                <Bluetooth className="mr-2 h-4 w-4" />
+                Listen for BLE advertisements
+            </Button>
+            <hr />
+            <ul>
+                {packets.map((packet, index) => (
+                <li key={index}>{packet}</li>
+                ))}
+            </ul>
         </main>
-    )
-  },
-})
-
-function Initial() {
-    return (
-        <div>
-            <ConnectToBLEDevice />
-        </div>
-    )
-}
-
-function Connected() {
-    return (
-        <div>
-            Connected state
-        </div>
-    )
-}
-
-function Measuring() {
-    return (
-        <div>
-            Measuring state
-        </div>
-    )
-}
-
-function Results() {
-    return (
-        <div>
-            Results state
-        </div>
     )
 }
 

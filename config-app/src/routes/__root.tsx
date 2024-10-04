@@ -2,8 +2,8 @@ import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/router-devtools'
 
 import {
-  Ruler,
-  Home
+  Home,
+  AudioLines,
 } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
@@ -21,10 +21,10 @@ function Root() {
             <Home className="h-6 w-6" />
           </Button>
         </Link>
-        <Link to='/measure-cycletime'>
+        <Link to='/listen' disabled>
           <Button variant="secondary" className="bg-secondary text-secondary-foreground">
-            <Ruler className="mr-2 h-4 w-4" />
-            New Measurement
+            <AudioLines className="mr-2 h-4 w-4" />
+            Listen
           </Button>
         </Link>
       </nav>
