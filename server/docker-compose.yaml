@@ -1,0 +1,57 @@
+name: "CheetosFingers"
+
+services:
+
+  influxdb:
+    image: influxdb:2.7.10
+    container_name: influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=cheetosfingers
+      - DOCKER_INFLUXDB_INIT_ORG=admin
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+    ports:
+      - 9571:8086
+      - 8086:8086
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2
+      - ./influxdb/config:/etc/influxdb2
+    restart: always
+
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    ports:
+      - 9572:9572
+    depends_on:
+      - influxdb
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    restart: always
+
+  grafana:
+    image: grafana/grafana-enterprise:10.1.5
+    restart: always
+    environment:
+      # GF_GRAFANA_NET_INSTANCE_NAME: "dao.wavesys.pt"
+      # GF_SERVER_HTTP_PORT: "3001"
+      # GF_SERVER_DOMAIN: "dao.wavesys.pt"
+      # GF_SERVER_ROOT_URL: "http://dao.wavesys.pt/"
+      GF_SERVER_ROOT_URL: "http://20.82.5.250/"
+      # #GF_SERVER_CERT_KEY: "/var/lib/grafana/grafana.key"
+      # GF_SERVER_ENFORCE_DOMAIN: "TRUE"
+      # GF_SERVER_FROM_SUB_PATH: "TRUE"
+      #GF_SERVER_PROTOCOL: "https"
+      #GF_SERVER_CERT_FILE: "/var/lib/grafana/grafana.crt"
+      GF_PLUGINS_ENABLE_ALPHA: "TRUE"
+      GF_FEATURE_TOGGLES_ENABLE: "newPanelChromeUI, topnav"
+    user: '0'
+    ports:
+      - '3000:3000'
+    volumes:
+      - "$PWD/configuration/grafana/data:/var/lib/grafana"
+
+volumes:
+  influxdata:
+  influxconfig:
