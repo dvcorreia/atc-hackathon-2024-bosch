@@ -7,6 +7,7 @@
 #include <Arduino_LSM9DS1.h>
 #endif
 
+#include <Arduino_APDS9960.h>
 #include <ArduinoBLE.h>
 
 #define WASM_STACK_SLOTS    1024
@@ -673,6 +674,41 @@ m3ApiRawFunction(m3_imu_mag_read) {
     m3ApiSuccess();
 }
 
+m3ApiRawFunction(m3_imu_accel_read) {
+    // m3ApiReturnType is void, but values can be written to the stack as needed.
+
+    // Expecting that the Wasm module passes in the memory locations for x, y, and z.
+    // These are pointers into the Wasm module's memory space, so we need to write the values there.
+
+    m3ApiGetArgMem(float*, ret_x); // Get memory location for return value x
+    m3ApiGetArgMem(float*, ret_y); // Get memory location for return value y
+    m3ApiGetArgMem(float*, ret_z); // Get memory location for return value z
+
+    float x = 0, y = 0, z = 0;
+    
+    // Check if the IMU gyroscope is available and read values
+    if (IMU.accelerationAvailable()) {
+        IMU.readAcceleration(x, y, z);
+    }
+
+    // Write the gyroscope readings into the Wasm memory locations
+    *ret_x = x;
+    *ret_y = y;
+    *ret_z = z;
+
+    // Return success
+    m3ApiSuccess();
+}
+
+m3ApiRawFunction(m3_gesture_read) {
+    uint32_t gesture = 4;
+    if (APDS.gestureAvailable()) {
+        gesture = APDS.readGesture();
+    }
+    m3ApiReturnType (uint32_t)
+    m3ApiReturn(gesture);
+}
+
 
 IM3Environment  env;
 IM3Runtime      runtime;
@@ -717,6 +753,9 @@ void load_wasm() {
     m3_LinkRawFunction (module, arduino, "printFloat",       "v(f)",   &m3_arduino_print_float);
     m3_LinkRawFunction (module, arduino, "imuGyroRead",      "v(***)", &m3_imu_gyro_read);
     m3_LinkRawFunction (module, arduino, "imuMagRead",       "v(***)", &m3_imu_mag_read);
+    m3_LinkRawFunction (module, arduino, "imuAccelRead",     "v(***)", &m3_imu_accel_read);
+    m3_LinkRawFunction (module, arduino, "gestureRead",      "v(i)",   &m3_gesture_read);
+    
     // accell
     // gest
 
@@ -739,6 +778,11 @@ void init_device() {
         while(1);
     }
 
+    if (!APDS.begin()) {
+        Serial.println("Failed to initialize motion sensor!");
+        while(1);
+    }
+
     if (!BLE.begin()) {
         Serial.println("failed to initialize BLE!");
         while (1);
@@ -757,7 +801,7 @@ void setup() {
 
     // Wait for serial port to connect
     // Needed for native USB port only
-    while(!Serial) {}
+    // while(!Serial) {}
 
     uint32_t tend, tstart;
     TSTART();

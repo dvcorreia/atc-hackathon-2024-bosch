@@ -1,44 +1,75 @@
 #include <ArduinoBLE.h>
+// #include <Arduino_LSM9DS1.h>
 
-BLEService myService("fff0");
-BLEIntCharacteristic myCharacteristic("fff1", BLERead | BLEBroadcast);
+// Bluetooth® Low Energy Custom Cycle Time Service
+BLEService cycleTimeService("FFF0");
 
-// Advertising parameters should have a global scope. Do NOT define them in 'setup' or in 'loop'
-const uint8_t manufactData[4] = {0x01, 0x02, 0x03, 0x04};
-const uint8_t serviceData[3] = {0x00, 0x01, 0x02};
+// Cycle Time Characteristic
+// remote clients will be able to get notifications if this characteristic changes
+BLEIntCharacteristic ts("FFF1", BLERead | BLENotify);
+
+void exit(int code) {
+  if (code != 0) {
+    Serial.print("error: code=");
+    Serial.println(code);
+  }
+  while (1);
+}
 
 void setup() {
   Serial.begin(9600);
   while (!Serial);
 
+  // initialize the built-in LED pin to indicate when a central is connected
+  pinMode(LED_BUILTIN, OUTPUT);
+
   if (!BLE.begin()) {
-    Serial.println("failed to initialize BLE!");
-    while (1);
+    Serial.println("error: failed to initialize BLE!");
+    exit(1);
   }
+  
+  BLE.setLocalName("NERVOUS-SYS-BLE");
+  BLE.setAdvertisedService(cycleTimeService); // add service UUID
+  cycleTimeService.addCharacteristic(ts); // add the cycle time characteristic
+  BLE.addService(cycleTimeService); // Add the cycle time service
 
-  myService.addCharacteristic(myCharacteristic);
-  BLE.addService(myService);
+  /* Start advertising Bluetooth® Low Energy. It will start continuously transmitting Bluetooth® Low Energy
+     advertising packets and will be visible to remote Bluetooth® Low Energy central devices
+     until it receives a new connection */
 
-  // Build scan response data packet
-  BLEAdvertisingData scanData;
-  // Set parameters for scan response packet
-  scanData.setLocalName("Test enhanced advertising");
-  // Copy set parameters in the actual scan response packet
-  BLE.setScanResponseData(scanData);
-
-  // Build advertising data packet
-  BLEAdvertisingData advData;
-  // Set parameters for advertising packet
-  advData.setManufacturerData(0x004C, manufactData, sizeof(manufactData));
-  advData.setAdvertisedService(myService);
-  advData.setAdvertisedServiceData(0xfff0, serviceData, sizeof(serviceData));
-  // Copy set parameters in the actual advertising packet
-  BLE.setAdvertisingData(advData);
-
+  // start advertising
   BLE.advertise();
-  Serial.println("advertising ...");
+
+  Serial.println("Bluetooth® device active, waiting for connections...");
 }
 
 void loop() {
-  BLE.poll();
+  // wait for a Bluetooth® Low Energy central
+  BLEDevice central = BLE.central();
+
+  // if a central is connected to the peripheral:
+  if (central) {
+    Serial.print("Connected to central: ");
+    // print the central's BT address:
+    Serial.println(central.address());
+    // turn on the LED to indicate the connection:
+    digitalWrite(LED_BUILTIN, HIGH);
+
+    // generate a cycle time every 200ms
+    // while the central is connected:
+    while (central.connected()) {
+      long currentMillis = millis();
+
+      // if 200ms have passed, update the cycle time:
+      if (currentMillis - previousMillis >= 200) {
+        previousMillis = currentMillis;
+        Serial.println("wewe")
+      }
+    }
+
+    // when the central disconnects, turn off the LED:
+    digitalWrite(LED_BUILTIN, LOW);
+    Serial.print("Disconnected from central: ");
+    Serial.println(central.address());
+  }
 }

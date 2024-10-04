@@ -66,6 +66,14 @@ func imuGyroRead(x *float32, y *float32, z *float32)
 func imuMagRead(x *float32, y *float32, z *float32)
 
 //go:wasm-module arduino
+//go:export imuAccelRead
+func imuAccelRead(x *float32, y *float32, z *float32)
+
+//go:wasm-module arduino
+//go:export gestureRead
+func gestureRead() uint
+
+//go:wasm-module arduino
 //go:export advBLETs
 func advBLETs(frameCounter uint16, elapsedTime uint)
 
@@ -76,6 +84,14 @@ func stopAdvBLE()
 //go:wasm-module arduino
 //go:export blePool
 func blePool()
+
+const (
+	GESTURE_UP uint = iota
+	GESTURE_DOWN
+	GESTURE_LEFT
+	GESTURE_RIGHT
+	UNKNOW = 5
+)
 
 type State int
 
