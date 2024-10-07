@@ -1,5 +1,5 @@
 import { createRootRoute, Link, Outlet } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/router-devtools'
+
 
 import {
   Home,
@@ -30,7 +30,6 @@ function Root() {
       </nav>
       <hr />
       <Outlet />
-      <TanStackRouterDevtools />
     </div>
   )
 }

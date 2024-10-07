@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { useToast } from '@/hooks/use-toast'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Bluetooth, LucideProps, Package, Wrench, Zap } from "lucide-react"
+import { Bluetooth, LucideProps, Flame, Bolt, PackageOpen } from "lucide-react"
 import { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
@@ -84,24 +84,24 @@ function Profiles(props: ProfilesProps) {
   const profiles = [
     {
       id: 0,
-      title: "Standard Profile",
-      description: "A basic profile for general use",
-      version: "1.0.0",
-      icon: Package,
+      title: "Linha Esquentadores 2",
+      description: "Sensor magnetómetro debaixo da bancada. Mede o ciclo de tempo da intervenção ao esquentador.",
+      version: "1.0.1-linha2",
+      icon: Flame,
     },
     {
       id: 1,
-      title: "Developer Profile",
-      description: "Advanced settings for developers",
-      version: "2.3.1",
-      icon: Wrench,
+      title: "Fixação do Chassi",
+      description: "Determina o tempo de fixação através da vibração da aparafusadora.",
+      version: "2.3.1-linha1",
+      icon: Bolt,
     },
     {
       id: 2,
-      title: "Power User Profile",
-      description: "Optimized for high-performance tasks",
-      version: "1.5.2",
-      icon: Zap,
+      title: "Embalagem de Esquentores",
+      description: "Deteção de gesto da empacotadora.",
+      version: "1.5.2-linha6",
+      icon: PackageOpen,
     },
   ]
 
