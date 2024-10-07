@@ -112,7 +112,10 @@ var (
 	startTime    uint
 	frameCounter uint16
 	elapsedTime  uint
-	threshold    float32 = 80.0
+	threshold    float32 = 1.8
+	numtries     uint    = 3
+	gesture      uint
+	count        uint = 0
 )
 
 var (
@@ -136,35 +139,32 @@ func setup() {
 	digitalWrite(LEDB, HIGH)
 }
 
-var magX, magY, magZ float32
+var acX, acY, acZ float32
 
 func loop() {
-	imuMagRead(&magX, &magY, &magZ)
-
-	magStrenght := Abs(magX) + Abs(magY) + Abs(magZ)
-
-	if magStrenght == 0 {
-		return
-	}
-
-	printFloat(magStrenght)
-	if magStrenght > threshold {
+	gesture = gestureRead()
+	if gesture == GESTURE_DOWN {
 		if state == IDLE {
 			startTime = millis()
 			state = MEASURING
-			digitalWrite(LED, HIGH)
-		}
-	} else {
-		if state == MEASURING {
-			elapsedTime = millis() - startTime
-			state = IDLE
 			digitalWrite(LED, LOW)
-
-			// Advertise Beacon
-			frameCounter++
-			stopAdvBLE()
-			advBLETs(frameCounter, elapsedTime)
 		}
+		for count < numtries {
+			imuAccelRead(&acX, &acY, &acZ)
+			accelStrenght := Abs(acX) + Abs(acY) + Abs(acZ)
+			if accelStrenght > threshold {
+				count = count + 1
+				delay(100)
+			}
+		}
+		elapsedTime = millis() - startTime
+		state = IDLE
+		count = 0
+		digitalWrite(LED, HIGH)
+		frameCounter++
+		stopAdvBLE()
+		advBLETs(frameCounter, elapsedTime)
+
 	}
 	blePool()
 }
