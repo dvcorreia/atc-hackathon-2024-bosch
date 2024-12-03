@@ -46,10 +46,6 @@
             (arduino-nix.latestVersion Arduino_LPS22HB)
             (arduino-nix.latestVersion Arduino_APDS9960)
             (arduino-nix.latestVersion Arduino_BMI270_BMM150)
-            # (arduino-nix.latestVersion WiFi)
-            # (arduino-nix.latestVersion HTTPClient)
-            # (arduino-nix.latestVersion ESP32_BLE_Arduino)
-            # (arduino-nix.latestVersion ESPmDNS)
           ];
 
           packages = with pkgs.arduinoPackages; [
@@ -58,7 +54,7 @@
           ];
         };
 
-        buildDeps = with pkgs; [
+        devDeps = with pkgs; [
           git
           gnumake
           go
@@ -71,14 +67,6 @@
           wabt
           unixtools.xxd
         ];
-
-        devDeps =
-          with pkgs;
-          buildDeps
-          ++ [
-            sqlc
-            gopls
-          ];
 
         arduino_project = "atc-hackathon-2024-bosch";
       in
