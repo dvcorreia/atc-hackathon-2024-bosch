@@ -57,6 +57,13 @@ services:
     volumes:
       - "$PWD/configuration/grafana/data:/var/lib/grafana"
 
+  mobile-app:
+    build:
+      context: .
+      # image: MobileApp
+      dockerfile: Dockerfile
+      # pull_policy: build
+
 volumes:
   influxdata:
   influxconfig:
