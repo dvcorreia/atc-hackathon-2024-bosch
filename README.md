@@ -81,3 +81,16 @@ docker-compose up -d
 * https://3-9-11.com/
 
 ![](images/mobile-app.png)
+
+# Settings
+
+## Create Token in Influx to use Grafana
+
+![](images/influx-token.png)
+
+## Add influx to Grafana
+
+![](images/grafana-influx-1.png)
+
+![](images/grafana-influx-2.png)
+
