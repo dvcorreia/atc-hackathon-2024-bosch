@@ -86,7 +86,7 @@ docker-compose up -d
 
 ## Create Token in Influx to use Grafana
 
-![](images/influx-token.png)
+![](images/influxdb-token.png)
 
 ## Add influx to Grafana
 
