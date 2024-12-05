@@ -43,3 +43,33 @@ Nix may stop working after a MacOS upgrade. If it does, follow [these instructio
 </details>
 
 Otherwise, you can have the headaches yourself.
+
+
+---
+
+# Configure Server
+
+## Confis to change:
+
+`docker-compose.yaml`
+
+```yaml
+GF_GRAFANA_NET_INSTANCE_NAME: "analytics.3-9-11.com"
+GF_SERVER_ROOT_URL: "https://analytics.3-9-11.com/"
+```
+
+## Copy from repository to server:
+
+```shell
+scp -r * azureuser@48.209.17.70:/home/azureuser/atc-hackathon-2024-bosch
+```
+
+## Boot the services
+
+```shell
+cd atc-hackathon-2024-bosch/server
+docker-compose up -d
+
+# or (if is already running)
+# docker-compose restart
+```

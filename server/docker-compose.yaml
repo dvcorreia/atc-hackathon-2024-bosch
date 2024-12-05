@@ -59,10 +59,10 @@ services:
 
   mobile-app:
     build:
-      context: .
-      # image: MobileApp
+      context: ../config-app
       dockerfile: Dockerfile
-      # pull_policy: build
+    ports:
+      - '80:80'
 
 volumes:
   influxdata:
